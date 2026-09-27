@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# CatBoost training logs
+catboost_info/
+
+# SQLite Database & Instance folder
+instance/
+*.db
+*.sqlite3
+
+# Environment & IDE
+.env
+.venv/
+env/
+venv/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,138 @@
+{
+    "project_title": "AI-Based Personal Finance Tracker and Finance AI Chatbot",
+    "dataset_statistics": {
+        "total_records": 20000,
+        "total_features": 27,
+        "missing_values": 0,
+        "duplicate_records": 0
+    },
+    "academic_ml_problem": {
+        "task_type": "Supervised Binary Classification & Regression",
+        "primary_target": "Financial_Health_Status (Healthy Saver vs Constrained)",
+        "benchmark_basis": "Classical 50/30/20 Budgeting Rule (>=20% Disposable Savings Rate)",
+        "leakage_prevention": "Strictly excluded Disposable_Income, Desired_Savings, Potential_Savings, and totals"
+    },
+    "hardware_environment": {
+        "cuda_available": true,
+        "gpu_name": "NVIDIA GeForce RTX 5070",
+        "gpu_count": 1,
+        "xgboost_gpu_acceleration": true
+    },
+    "model_comparison": {
+        "Logistic Regression": {
+            "train_accuracy": 0.9521428571428572,
+            "val_accuracy": 0.9503333333333334,
+            "test_accuracy": 0.947,
+            "test_precision": 0.947479850365882,
+            "test_recall": 0.947,
+            "test_f1_weighted": 0.9460305285168907,
+            "test_f1_macro": 0.9330089957542871,
+            "test_roc_auc": 0.9890138451487718,
+            "training_time_sec": 0.04
+        },
+        "Random Forest": {
+            "train_accuracy": 0.9969285714285714,
+            "val_accuracy": 0.9096666666666666,
+            "test_accuracy": 0.9126666666666666,
+            "test_precision": 0.9116102310960486,
+            "test_recall": 0.9126666666666666,
+            "test_f1_weighted": 0.9113796770351997,
+            "test_f1_macro": 0.8903258466537662,
+            "test_roc_auc": 0.9730069518751397,
+            "training_time_sec": 0.38
+        },
+        "Gradient Boosting": {
+            "train_accuracy": 0.9706428571428571,
+            "val_accuracy": 0.917,
+            "test_accuracy": 0.9266666666666666,
+            "test_precision": 0.9259503396643283,
+            "test_recall": 0.9266666666666666,
+            "test_f1_weighted": 0.9259952795770731,
+            "test_f1_macro": 0.9088614810506448,
+            "test_roc_auc": 0.9797322887795477,
+            "training_time_sec": 10.78
+        },
+        "XGBoost (GPU Accelerated)": {
+            "train_accuracy": 0.9980714285714286,
+            "val_accuracy": 0.9316666666666666,
+            "test_accuracy": 0.9443333333333334,
+            "test_precision": 0.9441216329655202,
+            "test_recall": 0.9443333333333334,
+            "test_f1_weighted": 0.9442062216616459,
+            "test_f1_macro": 0.9317297221944766,
+            "test_roc_auc": 0.9877620518341186,
+            "training_time_sec": 0.5
+        },
+        "Multi-Layer Perceptron (MLP)": {
+            "train_accuracy": 0.9908571428571429,
+            "val_accuracy": 0.9783333333333334,
+            "test_accuracy": 0.9726666666666667,
+            "test_precision": 0.9725787726091648,
+            "test_recall": 0.9726666666666667,
+            "test_f1_weighted": 0.9725698848584992,
+            "test_f1_macro": 0.9663952054974165,
+            "test_roc_auc": 0.9973151827824429,
+            "training_time_sec": 2.34
+        }
+    },
+    "selected_best_model": {
+        "name": "Multi-Layer Perceptron (MLP)",
+        "test_accuracy": 0.9726666666666667,
+        "test_precision": 0.9725787726091648,
+        "test_recall": 0.9726666666666667,
+        "test_f1_score": 0.9725698848584992,
+        "test_roc_auc": 0.9973151827824429,
+        "cv_5fold_mean": 0.9780588235294116,
+        "cv_5fold_std": 0.0011997692973159666,
+        "confusion_matrix": [
+            [
+                811,
+                51
+            ],
+            [
+                31,
+                2107
+            ]
+        ],
+        "classification_report": {
+            "Financially Constrained (<20% Savings)": {
+                "precision": 0.9631828978622328,
+                "recall": 0.9408352668213457,
+                "f1-score": 0.9518779342723005,
+                "support": 862.0
+            },
+            "Healthy Saver (>=20% Savings)": {
+                "precision": 0.9763670064874884,
+                "recall": 0.9855004677268475,
+                "f1-score": 0.9809124767225326,
+                "support": 2138.0
+            },
+            "accuracy": 0.9726666666666667,
+            "macro avg": {
+                "precision": 0.9697749521748606,
+                "recall": 0.9631678672740966,
+                "f1-score": 0.9663952054974165,
+                "support": 3000.0
+            },
+            "weighted avg": {
+                "precision": 0.9725787726091648,
+                "recall": 0.9726666666666667,
+                "f1-score": 0.9725698848584992,
+                "support": 3000.0
+            }
+        }
+    },
+    "optional_regression_model": {
+        "name": "Random Forest Regressor (Disposable Income Prediction)",
+        "r2_score": 0.9727087798340808,
+        "mae": 915.4904661213267,
+        "rmse": 1942.8418442610534
+    },
+    "training_time_total_seconds": 14.41,
+    "plots_generated": [
+        "metrics/plots/confusion_matrix.png",
+        "metrics/plots/roc_curve.png",
+        "metrics/plots/model_comparison.png",
+        "metrics/plots/feature_importance.png"
+    ]
+}
