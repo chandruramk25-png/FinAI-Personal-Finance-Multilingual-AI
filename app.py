@@ -480,8 +480,10 @@ def edit_transaction(tx_id):
             amt = float(data["amount"])
             if amt > 0:
                 tx.amount = amt
-        except ValueError:
-            pass
+            else:
+                return jsonify({"error": "Amount must be greater than zero"}), 400
+        except (ValueError, TypeError):
+            return jsonify({"error": "Invalid amount"}), 400
             
     db.session.commit()
     return jsonify({"message": "Transaction updated successfully"})

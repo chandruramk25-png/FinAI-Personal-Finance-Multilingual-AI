@@ -28,41 +28,52 @@
                 </div>
             </div>
 
-            <!-- Main Navigation -->
-            <nav class="navigation-bar" aria-label="Main Navigation">
-                <button class="nav-item active" data-tab="overview">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                    <span>Overview</span>
-                </button>
-                <button class="nav-item" data-tab="ledger">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                    <span>Transactions</span>
-                </button>
-                <button class="nav-item" data-tab="assessment">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                    <span>AI Evaluation</span>
-                </button>
-                <button class="nav-item" data-tab="assistant">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    <span>AI Assistant (EN / HI / TA)</span>
-                </button>
-                <button class="nav-item" data-tab="research">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <span>Model Report</span>
-                </button>
-            </nav>
+            <!-- Mobile Hamburger Button -->
+            <button class="hamburger-btn" id="btn-hamburger" aria-label="Toggle navigation menu" aria-expanded="false" type="button">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
 
-            <!-- Masthead Actions: Theme Switcher & User Auth -->
-            <div class="masthead-actions">
-                <button id="theme-toggle-btn" class="btn-theme-toggle" aria-label="Toggle theme" title="Toggle Light/Dark Theme">
-                    <span id="theme-icon">☀</span>
-                    <span id="theme-label">Light</span>
-                </button>
-                <div class="auth-bar" id="auth-bar-container">
-                    <button class="btn-ghost" id="btn-open-auth">Log In / Sign Up</button>
+            <!-- Navigation Bar & Actions Menu Wrapper -->
+            <div class="nav-menu-wrapper" id="nav-menu-wrapper">
+                <!-- Main Navigation -->
+                <nav class="navigation-bar" aria-label="Main Navigation">
+                    <button class="nav-item active" data-tab="overview">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        <span>Overview</span>
+                    </button>
+                    <button class="nav-item" data-tab="ledger">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        <span>Transactions</span>
+                    </button>
+                    <button class="nav-item" data-tab="assessment">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        <span>AI Evaluation</span>
+                    </button>
+                    <button class="nav-item" data-tab="assistant">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <span>AI Assistant (EN / HI / TA)</span>
+                    </button>
+                    <button class="nav-item" data-tab="research">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <span>Model Report</span>
+                    </button>
+                </nav>
+
+                <!-- Masthead Actions: Theme Switcher & User Auth -->
+                <div class="masthead-actions">
+                    <button id="theme-toggle-btn" class="btn-theme-toggle" aria-label="Toggle theme" title="Toggle Light/Dark Theme">
+                        <span id="theme-icon">☀</span>
+                        <span id="theme-label">Light</span>
+                    </button>
+                    <div class="auth-bar" id="auth-bar-container">
+                        <button class="btn-ghost" id="btn-open-auth">Log In / Sign Up</button>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
     </header>
 
     <!-- App Body -->
@@ -543,7 +554,7 @@
                     </div>
                     <div class="field">
                         <label for="form-tx-amount">Amount (₹)</label>
-                        <input type="number" id="form-tx-amount" required step="0.01" min="1" placeholder="e.g. 2500">
+                        <input type="number" id="form-tx-amount" required step="0.01" min="0.01" placeholder="e.g. 2500">
                     </div>
                     <div class="field">
                         <label for="form-tx-category">Category</label>

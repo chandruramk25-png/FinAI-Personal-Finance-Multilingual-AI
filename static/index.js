@@ -63,10 +63,52 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // =========================================================================
-    // 1. NAVIGATION
+    // 1. NAVIGATION & RESPONSIVE MOBILE MENU
     // =========================================================================
     const navItems = document.querySelectorAll(".nav-item");
     const viewPanes = document.querySelectorAll(".view-pane");
+    const btnHamburger = document.getElementById("btn-hamburger");
+    const navMenuWrapper = document.getElementById("nav-menu-wrapper");
+    const mobileNavBackdrop = document.getElementById("mobile-nav-backdrop");
+
+    function closeMobileMenu() {
+        if (btnHamburger) {
+            btnHamburger.classList.remove("active");
+            btnHamburger.setAttribute("aria-expanded", "false");
+        }
+        if (navMenuWrapper) navMenuWrapper.classList.remove("open");
+        if (mobileNavBackdrop) mobileNavBackdrop.classList.remove("active");
+    }
+
+    function toggleMobileMenu() {
+        if (!btnHamburger || !navMenuWrapper) return;
+        const isOpen = navMenuWrapper.classList.contains("open");
+        if (isOpen) {
+            closeMobileMenu();
+        } else {
+            btnHamburger.classList.add("active");
+            btnHamburger.setAttribute("aria-expanded", "true");
+            navMenuWrapper.classList.add("open");
+            if (mobileNavBackdrop) mobileNavBackdrop.classList.add("active");
+        }
+    }
+
+    if (btnHamburger) {
+        btnHamburger.addEventListener("click", toggleMobileMenu);
+    }
+    if (mobileNavBackdrop) {
+        mobileNavBackdrop.addEventListener("click", closeMobileMenu);
+    }
+
+    // Close mobile menu on Escape key
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMobileMenu();
+    });
+
+    // Close mobile menu if resized to desktop layout
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 992) closeMobileMenu();
+    });
 
     navItems.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -77,6 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.classList.add("active");
             const pane = document.getElementById(`pane-${target}`);
             if (pane) pane.classList.add("active");
+
+            // Close mobile menu immediately after selecting a navigation item
+            closeMobileMenu();
 
             if (target === "overview") loadDashboard();
             if (target === "ledger") loadTransactions();
@@ -125,9 +170,26 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.className = "btn-ghost";
             btn.id = "btn-open-auth";
             btn.textContent = "Log In / Sign Up";
-            btn.addEventListener("click", () => authModal.classList.remove("hidden"));
+            btn.addEventListener("click", () => {
+                closeMobileMenu();
+                authModal.classList.remove("hidden");
+            });
             authBarContainer.appendChild(btn);
         }
+    }
+
+    const initialOpenAuthBtn = document.getElementById("btn-open-auth");
+    if (initialOpenAuthBtn) {
+        initialOpenAuthBtn.addEventListener("click", () => {
+            closeMobileMenu();
+            authModal.classList.remove("hidden");
+        });
+    }
+
+    if (authModal) {
+        authModal.addEventListener("click", (e) => {
+            if (e.target === authModal) authModal.classList.add("hidden");
+        });
     }
 
     async function handleSignout() {
@@ -295,6 +357,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const trendCtx = trendEl.getContext("2d");
             if (trendChartInstance) trendChartInstance.destroy();
 
+            const isSmallScreen = window.innerWidth < 480;
+
             trendChartInstance = new Chart(trendCtx, {
                 type: "line",
                 data: {
@@ -308,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             tension: 0.3,
                             fill: true,
                             pointBackgroundColor: "#10b981",
-                            pointRadius: 4,
+                            pointRadius: isSmallScreen ? 3 : 4,
                             borderWidth: 2
                         },
                         {
@@ -319,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             tension: 0.3,
                             fill: true,
                             pointBackgroundColor: "#f43f5e",
-                            pointRadius: 4,
+                            pointRadius: isSmallScreen ? 3 : 4,
                             borderWidth: 2
                         }
                     ]
@@ -328,7 +392,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { labels: { color: tickColor, font: { family: "Plus Jakarta Sans", weight: "500" } } },
+                        legend: { 
+                            labels: { 
+                                color: tickColor, 
+                                font: { family: "Plus Jakarta Sans", weight: "500", size: isSmallScreen ? 10 : 12 },
+                                boxWidth: isSmallScreen ? 12 : 24
+                            } 
+                        },
                         tooltip: {
                             callbacks: {
                                 label: (ctx) => `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString("en-IN")}`
@@ -338,14 +408,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     scales: {
                         x: {
                             grid: { color: gridColor },
-                            ticks: { color: tickColor, font: { family: "Plus Jakarta Sans" } }
+                            ticks: { 
+                                color: tickColor, 
+                                font: { family: "Plus Jakarta Sans", size: isSmallScreen ? 9 : 11 },
+                                maxRotation: isSmallScreen ? 35 : 0
+                            }
                         },
                         y: {
                             grid: { color: gridColor },
                             ticks: {
                                 color: tickColor,
-                                font: { family: "Space Grotesk" },
-                                callback: (v) => "₹" + v.toLocaleString("en-IN")
+                                font: { family: "Space Grotesk", size: isSmallScreen ? 9 : 11 },
+                                callback: (v) => {
+                                    if (isSmallScreen && Math.abs(v) >= 1000) {
+                                        return "₹" + (v / 1000).toFixed(0) + "k";
+                                    }
+                                    return "₹" + v.toLocaleString("en-IN");
+                                }
                             }
                         }
                     }
@@ -358,6 +437,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (catEl) {
             const catCtx = catEl.getContext("2d");
             if (categoryChartInstance) categoryChartInstance.destroy();
+
+            const isSmallScreen = window.innerWidth < 480;
 
             const distinctPalette = [
                 "#3b82f6", "#10b981", "#f59e0b", "#ec4899",
@@ -382,7 +463,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     plugins: {
                         legend: {
                             position: "bottom",
-                            labels: { color: tickColor, font: { size: 11, family: "Plus Jakarta Sans" }, boxWidth: 10 }
+                            labels: { 
+                                color: tickColor, 
+                                font: { size: isSmallScreen ? 9.5 : 11, family: "Plus Jakarta Sans" }, 
+                                boxWidth: isSmallScreen ? 8 : 10,
+                                padding: isSmallScreen ? 6 : 10
+                            }
                         },
                         tooltip: {
                             callbacks: {
@@ -390,11 +476,22 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
                         }
                     },
-                    cutout: "70%"
+                    cutout: isSmallScreen ? "60%" : "70%"
                 }
             });
         }
     }
+
+    // Auto re-render charts on orientation / window resize with debounce
+    let chartResizeDebounce = null;
+    window.addEventListener("resize", () => {
+        clearTimeout(chartResizeDebounce);
+        chartResizeDebounce = setTimeout(() => {
+            if (cachedChartsData) {
+                renderCharts(cachedChartsData);
+            }
+        }, 200);
+    });
 
     // =========================================================================
     // 4. TRANSACTIONS LEDGER CRUD & FILTERS
@@ -481,8 +578,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnQuickAddTx = document.getElementById("btn-quick-add-tx");
     const btnCloseTxModal = document.getElementById("btn-close-tx-modal");
     const btnCancelTxModal = document.getElementById("btn-cancel-tx-modal");
+    const btnSaveTx = document.getElementById("btn-save-tx");
+
+    function closeTxModal() {
+        if (!txModal) return;
+        txModal.classList.add("hidden");
+        const idField = document.getElementById("form-tx-id");
+        if (idField) idField.value = "";
+        if (txForm) txForm.reset();
+    }
 
     function openNewTxModal() {
+        if (!txModal) return;
         document.getElementById("modal-title").textContent = "Record Transaction";
         document.getElementById("form-tx-id").value = "";
         document.getElementById("form-tx-date").value = new Date().toISOString().split("T")[0];
@@ -496,8 +603,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btnOpenTxModal.addEventListener("click", openNewTxModal);
     btnQuickAddTx.addEventListener("click", openNewTxModal);
-    btnCloseTxModal.addEventListener("click", () => txModal.classList.add("hidden"));
-    btnCancelTxModal.addEventListener("click", () => txModal.classList.add("hidden"));
+    btnCloseTxModal.addEventListener("click", closeTxModal);
+    btnCancelTxModal.addEventListener("click", closeTxModal);
+
+    // Close when clicking modal backdrop
+    if (txModal) {
+        txModal.addEventListener("click", (e) => {
+            if (e.target === txModal) closeTxModal();
+        });
+    }
 
     async function openEditTxModal(id) {
         try {
@@ -536,37 +650,70 @@ document.addEventListener("DOMContentLoaded", () => {
 
     txForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const id = document.getElementById("form-tx-id").value;
+        const rawId = (document.getElementById("form-tx-id").value || "").trim();
+        const hasValidId = Boolean(rawId && !isNaN(parseInt(rawId, 10)) && parseInt(rawId, 10) > 0);
+        const amountVal = parseFloat(document.getElementById("form-tx-amount").value);
+
+        if (isNaN(amountVal) || amountVal <= 0) {
+            showToast("Please enter a valid amount greater than 0", "error");
+            return;
+        }
+
+        const dateVal = document.getElementById("form-tx-date").value;
         const payload = {
-            date: document.getElementById("form-tx-date").value,
-            amount: parseFloat(document.getElementById("form-tx-amount").value),
-            type: document.getElementById("form-tx-type").value,
-            category: document.getElementById("form-tx-category").value,
-            payment_method: document.getElementById("form-tx-payment").value,
-            description: document.getElementById("form-tx-desc").value.trim()
+            date: dateVal || new Date().toISOString().split("T")[0],
+            amount: amountVal,
+            type: (document.getElementById("form-tx-type").value || "expense").toLowerCase(),
+            category: document.getElementById("form-tx-category").value || "Miscellaneous",
+            payment_method: document.getElementById("form-tx-payment").value || "UPI",
+            description: (document.getElementById("form-tx-desc").value || "").trim()
         };
 
+        const originalBtnText = btnSaveTx ? btnSaveTx.textContent : "Save Entry";
+        if (btnSaveTx) {
+            btnSaveTx.disabled = true;
+            btnSaveTx.textContent = "Saving...";
+        }
+
         try {
-            const url = id ? `/api/transactions/${id}` : "/api/transactions";
-            const method = id ? "PUT" : "POST";
+            const url = hasValidId ? `/api/transactions/${rawId}` : "/api/transactions";
+            const method = hasValidId ? "PUT" : "POST";
 
             const res = await fetch(url, {
                 method: method,
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
                 body: JSON.stringify(payload)
             });
 
             if (res.ok) {
-                txModal.classList.add("hidden");
-                showToast(id ? "Entry updated" : "Entry recorded", "success");
-                loadTransactions();
-                loadDashboard();
+                closeTxModal();
+                showToast(hasValidId ? "Entry updated" : "Entry recorded", "success");
+                await loadTransactions();
+                await loadDashboard();
             } else {
-                const err = await res.json();
-                showToast(err.error || "Save failed", "error");
+                let errorMsg = "Save failed";
+                try {
+                    const err = await res.json();
+                    errorMsg = err.error || err.message || errorMsg;
+                } catch (_) {
+                    try {
+                        const txt = await res.text();
+                        if (txt) errorMsg = txt.slice(0, 100);
+                    } catch (_) {}
+                }
+                showToast(errorMsg, "error");
             }
-        } catch (e) {
-            showToast("Save failed", "error");
+        } catch (err) {
+            console.error("Transaction save error:", err);
+            showToast("Network error: Save failed", "error");
+        } finally {
+            if (btnSaveTx) {
+                btnSaveTx.disabled = false;
+                btnSaveTx.textContent = originalBtnText;
+            }
         }
     });
 
@@ -592,6 +739,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btnCloseBudgetModal.addEventListener("click", () => budgetModal.classList.add("hidden"));
     btnCancelBudgetModal.addEventListener("click", () => budgetModal.classList.add("hidden"));
+    if (budgetModal) {
+        budgetModal.addEventListener("click", (e) => {
+            if (e.target === budgetModal) budgetModal.classList.add("hidden");
+        });
+    }
 
     budgetForm.addEventListener("submit", async (e) => {
         e.preventDefault();
