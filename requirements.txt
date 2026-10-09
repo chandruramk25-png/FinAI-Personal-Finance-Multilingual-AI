@@ -10,3 +10,4 @@ seaborn>=0.13.0
 joblib>=1.4.0
 xgboost>=2.0.0
 torch>=2.2.0
+gunicorn
