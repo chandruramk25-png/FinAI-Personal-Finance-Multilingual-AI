@@ -97,6 +97,9 @@ chatbot_engine = FinanceChatbotEngine(
     ml_pipeline=ml_pipeline
 )
 
+with app.app_context():
+    db.create_all()
+
 
 # ==============================================================================
 # DATABASE SEEDING
@@ -185,6 +188,8 @@ def seed_demo_data():
             if not user.password_hash or not user.password_hash.startswith("scrypt:"):
                 user.set_password("password123")
                 db.session.commit()
+
+seed_demo_data()
 
 
 # ==============================================================================
@@ -740,7 +745,6 @@ def handle_profile():
 # ENTRY POINT
 # ==============================================================================
 if __name__ == "__main__":
-    seed_demo_data()
     print("\n" + "=" * 70)
     print("AI PERSONAL FINANCE TRACKER & CHATBOT - FLASK SERVER")
     print("Running at: http://127.0.0.1:5000")
